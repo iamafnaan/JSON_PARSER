@@ -7,7 +7,7 @@ class TokenType(StrEnum):
     BOOLEAN = auto()
     NULL =auto()
     LEFT_BRACE = auto()
-    RIGHT_BRUCE = auto()
+    RIGHT_BRACE = auto()
     LEFT_BRACKET = auto()
     RIGHT_BRACKET = auto()
     COMMA = auto()
@@ -17,7 +17,7 @@ class TokenType(StrEnum):
 
 class Token:
     def __init__(self, token_type : TokenType, value: Any):
-        self.tokentype = token_type
+        self.token_type = token_type
         self.value = value
 
 class Scanner:
@@ -30,11 +30,12 @@ class Scanner:
         self.line = 1
 
     def scan(self) -> list[Token]:
-        while self.is_not_end():
+        while not self.is_at_end():
             self.start = self.current
             self.scan_token()
         self.tokens.append(Token(TokenType.EOF, None))
         return self.tokens
+    
     def is_at_end(self):
         return self.current >= len(self.source)
     
@@ -92,7 +93,7 @@ class Scanner:
         while self.peek().isdigit():
             self.advance()
         if self.peek() == ".":
-            if not self.peek_next().isdiit():
+            if not self.peek_next().isdigit():
                 raise ValueError("Expected digit after .(trying parse float)")
             self.advance()
             while self.peek().isdigit():
